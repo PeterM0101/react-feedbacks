@@ -1,0 +1,28 @@
+.feedback-form {
+  &__input-group {
+    position: relative;
+    display: flex;
+    border: 1px solid #ccc;
+    padding: .5rem 10px;
+    border-radius: .5rem;
+    input {
+      flex-grow: 1;
+      border: none;
+      font-size: 1.2rem;
+      &:focus {
+        outline: none;
+      }
+      &::placeholder {
+        font-size: 1.2rem;
+      }
+    }
+    button {
+      justify-self: right;
+    }
+  }
+  &__message {
+    text-align: center;
+    margin-top: .5rem;
+    color: purple;
+  }
+}

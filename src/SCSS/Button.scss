@@ -1,0 +1,55 @@
+.btn {
+  cursor: pointer;
+
+  &--primary,
+  &--secondary{
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      width: 100px;
+      height: 40px;
+    &:hover {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+      color: #333;
+      cursor: auto;
+    }
+
+    &:disabled:hover {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  &--icon {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &:hover {
+      background-color: silver;
+    }
+  }
+  &--primary {
+    background-color: #202142;
+  }
+
+  &--secondary {
+    background: #ff6a95;
+  }
+}

@@ -10,8 +10,11 @@
     "@types/node": "^16.11.36",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
+    "framer-motion": "^6.3.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-icons": "^4.3.1",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.7.2",
     "web-vitals": "^2.1.4"
@@ -21,6 +24,30 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 3,
+    "useTabs": true,
+    "semi": true,
+    "singleQuote": true,
+    "importOrder": [
+      "<THIRD_PARTY_MODULES>",
+      "^@/components/(.*)$",
+      "^@/screens/(.*)$",
+      "^@/ui/(.*)$",
+      "^@/hooks/(.*)$",
+      "^@/assets/(.*)$",
+      "^@/shared/(.*)$",
+      "^@/utils/(.*)$",
+      "^@/store/(.*)$",
+      "^@/config/(.*)$",
+      "^@/services/(.*)$",
+      "^../(.*)",
+      "(.scss)$"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +66,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prettier": "2.6.2",
+    "sass": "^1.52.1",
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0"
   }
 }

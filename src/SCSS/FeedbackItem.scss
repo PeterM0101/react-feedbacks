@@ -1,0 +1,33 @@
+.feedback-item {
+  &__rating {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    background-color: #DC487E;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 19px;
+    border: 1px #eee solid;
+    transition: 0.3s;
+  }
+
+  &__text {
+    color: inherit;
+  }
+
+  &__cta {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-40%, 50%);
+    display: flex;
+    justify-content: space-between;
+    width: 40px;
+  }
+}

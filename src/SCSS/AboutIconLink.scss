@@ -1,0 +1,13 @@
+.about-link {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(-50%, -50%);
+  a {
+    cursor: pointer;
+    color: white;
+  }
+  & a:hover {
+    color: #ff6a95;
+  }
+}
