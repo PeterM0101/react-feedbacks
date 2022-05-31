@@ -1,35 +1,37 @@
-import { createContext, FC, ReactNode, useReducer } from 'react';
+import { createContext, FC, ReactNode, useEffect, useReducer } from 'react';
 import FeedbackI from '../Data/FeedbackI';
-import FeedbackData from '../Data/FeedbackData';
 import feedbackI from '../Data/FeedbackI';
-
-interface FeedbackInfo {
-	text: string;
-	rating: number;
-}
+import { v4 as uuid } from 'uuid';
+import { fetchFeedbacks } from '../Services/FeedbackServices';
 
 type FeedbackActionTypes =
-	| { type: 'ADD_FEEDBACK'; payload: FeedbackInfo }
-	| { type: 'DELETE_FEEDBACK'; payload: number }
+	| { type: 'ADD_FEEDBACK'; payload: FeedbackI }
+	| { type: 'GET_FEEDBACKS'; payload: FeedbackI[] }
+	| { type: 'DELETE_FEEDBACK'; payload: string }
 	| { type: 'EDIT_FEEDBACK'; payload: FeedbackI }
+	| { type: 'START_LOADING' }
 	| { type: 'CHANGE_CURRENT_FEEDBACK'; payload: FeedbackI };
 
 interface FeedbacksContextI {
 	feedbacks: FeedbackI[];
+	isLoading: boolean;
 	currentFeedback: FeedbackI | null;
-	onAddFeedback: (newFeedback: FeedbackInfo) => void;
-	onDeleteFeedback: (id: number) => void;
+	onAddFeedback: (newFeedback: FeedbackI) => void;
+	onDeleteFeedback: (id: string) => void;
 	onEditFeedback: (newFeedback: FeedbackI) => void;
 	onChangeCurrentFeedback: (newCurrentFeedback: FeedbackI) => void;
+	startLoading: () => void;
 }
 
 const feedbackContextInitial = {
-	feedbacks: FeedbackData,
+	feedbacks: [],
+	isLoading: false,
 	currentFeedback: null,
-	onAddFeedback: (newFeedback: FeedbackInfo) => {},
-	onDeleteFeedback: (id: number) => {},
+	onAddFeedback: (newFeedback: FeedbackI) => {},
+	onDeleteFeedback: (id: string) => {},
 	onEditFeedback: (newFeedback: FeedbackI) => {},
 	onChangeCurrentFeedback: (newCurrentFeedback: FeedbackI) => {},
+	startLoading: () => {},
 };
 
 export const FeedbacksContext = createContext<FeedbacksContextI>(
@@ -46,23 +48,19 @@ const feedbackReducer = (
 ) => {
 	switch (action.type) {
 		case 'ADD_FEEDBACK': {
-			const newFeedback: FeedbackI = {
-				text: action.payload.text,
-				rating: action.payload.rating,
-				id:
-					state.feedbacks.length === 0
-						? 1
-						: state.feedbacks.reduce(
-								(acc: number, current: FeedbackI) =>
-									acc > +current.id ? acc : current.id,
-								-Infinity
-						  ) + 1,
+			return {
+				...state,
+				feedbacks: [action.payload, ...state.feedbacks],
+				isLoading: false,
 			};
-			return { ...state, feedbacks: [...state.feedbacks, newFeedback] };
+		}
+		case 'GET_FEEDBACKS': {
+			return { ...state, feedbacks: action.payload, isLoading: false };
 		}
 		case 'DELETE_FEEDBACK':
 			return {
 				...state,
+				isLoading: false,
 				feedbacks: [
 					...state.feedbacks.filter(
 						(feedback) => feedback.id !== action.payload
@@ -74,6 +72,11 @@ const feedbackReducer = (
 				...state,
 				currentFeedback: action.payload,
 			};
+		case 'START_LOADING':
+			return {
+				...state,
+				isLoading: true,
+			};
 		case 'EDIT_FEEDBACK': {
 			const newFeedbacks = [...state.feedbacks];
 			const ind = newFeedbacks.findIndex(
@@ -82,6 +85,7 @@ const feedbackReducer = (
 			newFeedbacks[ind] = action.payload;
 			return {
 				...state,
+				isLoading: false,
 				feedbacks: newFeedbacks,
 				currentFeedback: null,
 			};
@@ -94,16 +98,33 @@ const feedbackReducer = (
 export const FeedbacksContextProvider: FC<FeedbacksContextProviderProps> = ({
 	children,
 }) => {
-	const [{ feedbacks, currentFeedback }, dispatch] = useReducer(
+	const [{ feedbacks, currentFeedback, isLoading }, dispatch] = useReducer(
 		feedbackReducer,
 		feedbackContextInitial
 	);
+
+	useEffect(() => {
+		const getFeedbacks = async () => {
+			dispatch({ type: 'START_LOADING' });
+			try {
+				const data = await fetchFeedbacks();
+				dispatch({ type: 'GET_FEEDBACKS', payload: data as FeedbackI[] });
+			} catch (error) {
+				console.warn(error);
+			}
+		};
+		getFeedbacks();
+	}, []);
 
 	return (
 		<FeedbacksContext.Provider
 			value={{
 				feedbacks,
+				isLoading,
 				currentFeedback,
+				startLoading: () => {
+					dispatch({ type: 'START_LOADING' });
+				},
 				onAddFeedback: (newFeedback) => {
 					dispatch({ type: 'ADD_FEEDBACK', payload: newFeedback });
 				},

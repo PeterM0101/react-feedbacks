@@ -1,5 +1,5 @@
 interface FeedbackI {
-	id: number;
+	id: string;
 	rating: number;
 	text: string;
 }

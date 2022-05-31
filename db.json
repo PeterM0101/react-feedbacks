@@ -1,0 +1,24 @@
+{
+  "feedbacks": [
+    {
+      "id": "1",
+      "rating": 10,
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. consequuntur vel vitae commodi alias voluptatem est voluptatum ipsa quae."
+    },
+    {
+      "id": "2",
+      "rating": 9,
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. consequuntur vel vitae commodi alias voluptatem est voluptatum ipsa quae."
+    },
+    {
+      "id": "3",
+      "rating": 8,
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. consequuntur vel vitae commodi alias voluptatem est voluptatum ipsa quae."
+    },
+    {
+      "text": "The most delicious dish I've ever eaten! ",
+      "rating": 10,
+      "id": "ffec380a-da37-44e6-b572-badb88f9a1fe"
+    }
+  ]
+}

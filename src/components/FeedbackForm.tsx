@@ -10,12 +10,19 @@ import Card from './Shared/Card';
 import '../SCSS/FeedbackForm.scss';
 import Button from './Shared/Button';
 import SetRating from './SetRating';
-import FeedbackI from '../Data/FeedbackI';
 import { FeedbacksContext } from '../Context/FeedbacksContext';
+import { v4 as uuidv4 } from 'uuid';
+import { createFeedback, updateFeedback } from '../Services/FeedbackServices';
+import Spinner from './Shared/Spinner';
 
 const FeedbackForm: FC = () => {
-	const { onAddFeedback, currentFeedback, onEditFeedback } =
-		useContext(FeedbacksContext);
+	const {
+		onAddFeedback,
+		currentFeedback,
+		onEditFeedback,
+		isLoading,
+		startLoading,
+	} = useContext(FeedbacksContext);
 	const [text, setText] = useState('');
 	const [btnDisabled, setBtnDisabled] = useState(true);
 	const [message, setMessage] = useState<string | null>(null);
@@ -23,7 +30,6 @@ const FeedbackForm: FC = () => {
 
 	useEffect(() => {
 		if (currentFeedback !== null) {
-			console.log('Hi');
 			setRating(currentFeedback.rating);
 			setText(currentFeedback.text);
 			if (currentFeedback.text.trim().length <= 10) {
@@ -48,13 +54,33 @@ const FeedbackForm: FC = () => {
 		setText(e.target.value);
 	};
 
-	const addFeedback = (e: FormEvent) => {
+	const addFeedback = async (e: FormEvent) => {
 		e.preventDefault();
 		if (text.trim().length >= 10) {
 			if (currentFeedback === null) {
-				onAddFeedback({ text, rating });
+				try {
+					startLoading();
+					const data = await createFeedback({
+						text,
+						rating,
+						id: uuidv4(),
+					});
+					onAddFeedback(data);
+				} catch (error) {
+					console.warn(error);
+				}
 			} else {
-				onEditFeedback({ text, rating, id: currentFeedback.id });
+				try {
+					startLoading();
+					const data = await updateFeedback({
+						text,
+						rating,
+						id: currentFeedback.id,
+					});
+					onEditFeedback(data);
+				} catch (error) {
+					console.warn(error);
+				}
 			}
 			setRating(1);
 			setText('');

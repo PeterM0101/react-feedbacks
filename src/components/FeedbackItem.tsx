@@ -6,19 +6,31 @@ import Button from '../components/Shared/Button';
 import '../SCSS/FeedbackItem.scss';
 import { FeedbacksContext } from '../Context/FeedbacksContext';
 import FeedbackI from '../Data/FeedbackI';
+import { removeFeedback } from '../Services/FeedbackServices';
+import Spinner from './Shared/Spinner';
 
 interface FeedbackItemProps {
 	feedback: FeedbackI;
 }
 
 const FeedbackItem: FC<FeedbackItemProps> = ({ feedback }) => {
-	const { onDeleteFeedback, onChangeCurrentFeedback } =
-		useContext(FeedbacksContext);
+	const {
+		onDeleteFeedback,
+		onChangeCurrentFeedback,
+		isLoading,
+		startLoading,
+	} = useContext(FeedbacksContext);
 	const { id, text, rating } = feedback;
 
-	const handleDelete = (id: number) => {
+	const handleDelete = async (id: string) => {
 		if (window.confirm('Are you sure you want to delete?')) {
-			onDeleteFeedback(id);
+			try {
+				startLoading();
+				const data = await removeFeedback(id);
+				onDeleteFeedback(id);
+			} catch (error) {
+				console.warn(error);
+			}
 		}
 	};
 
